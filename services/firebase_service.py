@@ -18,10 +18,14 @@ class FirebaseService:
           "firebase_admin_creds_path": "serviceAccount.json"
         }
         """
-        candidates = [config_path, "keys.json", "keys/keys.json", "components/keys/keys.json"]
+        # Solo aceptamos una ruta: la que pasen por parámetro o 'keys.json' por defecto
+        candidates = [config_path] if config_path else ["keys.json"]
+
         cfg_path = next((p for p in candidates if os.path.exists(p)), None)
         if not cfg_path:
-            raise FileNotFoundError(f"No encuentro keys.json. Probé: {', '.join(candidates)}")
+            raise FileNotFoundError(
+                f"No encuentro keys.json. Probé: {', '.join(candidates)}"
+            )
 
         with open(cfg_path, "r", encoding="utf-8") as f:
             cfg = json.load(f)
@@ -33,7 +37,12 @@ class FirebaseService:
 
         self.api_key: str = cfg["firebase_web_api_key"]
         self.project_id: str = cfg["firebase_project_id"]
-        self.creds_path: str = cfg["firebase_admin_creds_path"]
+
+        # Si la ruta del service account es relativa, resolver respecto a la carpeta donde está keys.json
+        creds_path = cfg["firebase_admin_creds_path"]
+        if not os.path.isabs(creds_path):
+            creds_path = os.path.join(os.path.dirname(os.path.abspath(cfg_path)), creds_path)
+        self.creds_path: str = creds_path
 
         if not os.path.exists(self.creds_path):
             raise FileNotFoundError(f"No encuentro el service account en: {self.creds_path}")
