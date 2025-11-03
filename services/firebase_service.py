@@ -15,7 +15,7 @@ class FirebaseService:
         {
           "firebase_web_api_key": "AAAA....",
           "firebase_project_id": "tu-proyecto",
-          "firebase_admin_creds_path": "keys/serviceAccount.json"
+          "firebase_admin_creds_path": "serviceAccount.json"
         }
         """
         candidates = [config_path, "keys.json", "keys/keys.json", "components/keys/keys.json"]
