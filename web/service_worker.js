@@ -1,3 +1,6 @@
+importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+
+
 // web/service_worker.js
 const CACHE_NAME = "mindful-cache-v4"; // <-- sube versión si cambias assets
 const CORE_ASSETS = [
