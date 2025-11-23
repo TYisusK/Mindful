@@ -5,40 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mindful+</title>
 
-<!-- OneSignal web SDK -->
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-<script>
-  // helpers SIEMPRE disponibles en consola
-  window.requestPush = function () {
+ <!-- OneSignal SDK v16 -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
     window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async function(OneSignal){
-      await OneSignal.Slidedown.promptPush();
-    });
-  };
-  window.osInfo = function () {
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-    window.OneSignalDeferred.push(async function(OneSignal){
-      console.log("permission:", await OneSignal.Notifications.permission);
-      console.log("token:", await OneSignal.User.PushSubscription.getToken());
-    });
-  };
+    OneSignalDeferred.push(async function (OneSignal) {
+      await OneSignal.init({
+        appId: "d7364623-93c0-44ac-b94a-889fbb96c42b",
 
-  // init diferida
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "d7364623-93c0-44ac-b94a-889fbb96c42b",
-      serviceWorkerPath: "OneSignalSDKWorker.js",
-      serviceWorkerUpdaterPath: "OneSignalSDKUpdaterWorker.js",
-      serviceWorkerParam: { scope: "/" },
-      notifyButton: { enable: true }
+        // ❗ Usamos TU service worker existente
+        serviceWorkerPath: "/service_worker.js",
+        serviceWorkerParam: { scope: "/" },
+
+        // Opcional: botón flotante de suscripción
+        notifyButton: { enable: true }
+      });
+
+      // Pide permiso una vez al cargar
+      OneSignal.Slidedown.promptPush();
     });
-
-    // (Opcional) auto-prompt al cargar
-    await OneSignal.Slidedown.promptPush();
-  });
-</script>
-
+  </script>
 
   <style>
     html,body{height:100%;margin:0;background:#F7F5FF;font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;}
