@@ -5,40 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mindful+</title>
 
-  <!-- PWA -->
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#5B4BDB" />
-  <link rel="icon" sizes="192x192" href="/icons/log192.png" />
-  <link rel="apple-touch-icon" href="/icons/log192.png" />
-
-  <!-- OneSignal web SDK (v16) -->
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-  <script>
+<!-- OneSignal web SDK -->
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  // helpers SIEMPRE disponibles en consola
+  window.requestPush = function () {
     window.OneSignalDeferred = window.OneSignalDeferred || [];
-    OneSignalDeferred.push(async function(OneSignal) {
-      await OneSignal.init({
-        appId: "d7364623-93c0-44ac-b94a-889fbb96c42b",
-        /* IMPORTANTÍSIMO: estos 2 archivos deben existir en / */
-        serviceWorkerPath: "OneSignalSDKWorker.js",
-        serviceWorkerUpdaterPath: "OneSignalSDKUpdaterWorker.js",
-        serviceWorkerParam: { scope: "/" },
-        /* Útil para pruebas: botón flotante */
-        notifyButton: { enable: true }
-      });
-
-      // Para probar: abre el deslizable de permisos automáticamente
-      // (puedes quitar esto luego)
+    window.OneSignalDeferred.push(async function(OneSignal){
       await OneSignal.Slidedown.promptPush();
     });
+  };
+  window.osInfo = function () {
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(async function(OneSignal){
+      console.log("permission:", await OneSignal.Notifications.permission);
+      console.log("token:", await OneSignal.User.PushSubscription.getToken());
+    });
+  };
 
-    // Helper para invocar desde consola si quieres:
-    window.requestPush = function() {
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async (OneSignal) => {
-        await OneSignal.Slidedown.promptPush();
-      });
-    };
-  </script>
+  // init diferida
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "d7364623-93c0-44ac-b94a-889fbb96c42b",
+      serviceWorkerPath: "OneSignalSDKWorker.js",
+      serviceWorkerUpdaterPath: "OneSignalSDKUpdaterWorker.js",
+      serviceWorkerParam: { scope: "/" },
+      notifyButton: { enable: true }
+    });
+
+    // (Opcional) auto-prompt al cargar
+    await OneSignal.Slidedown.promptPush();
+  });
+</script>
+
 
   <style>
     html,body{height:100%;margin:0;background:#F7F5FF;font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;}
