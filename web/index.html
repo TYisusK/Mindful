@@ -1,5 +1,40 @@
 <!doctype html>
 <html lang="es">
+
+  <!-- OneSignal SDK -->
+<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+
+<script>
+  // Inicialización OneSignal (ajusta con tu App ID):
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  window.OneSignalDeferred.push(function(OneSignal) {
+    OneSignal.init({
+      appId: "d7364623-93c0-44ac-b94a-889fbb96c42b",
+      // Para desarrollo local:
+      allowLocalhostAsSecureOrigin: true,
+
+      // Rutas de Service Worker (deben existir en /web):
+      serviceWorkerPath: "/OneSignalSDKWorker.js",
+      serviceWorkerUpdaterPath: "/OneSignalSDKUpdaterWorker.js",
+      serviceWorkerParam: { scope: "/" },
+
+      // Opcional: activar prompt automático "slidedown":
+      promptOptions: {
+        slidedown: {
+          enabled: true,
+          autoPrompt: true,  // pide permiso automáticamente (puedes poner false si prefieres mostrar un botón propio)
+          categories: {
+            enabled: false
+          }
+        }
+      }
+    });
+
+    // (Opcional) mostrar campanita/bell de suscripción
+    OneSignal.showSlidedownPrompt(); // o comenta esta línea y controla tú el momento
+  });
+</script>
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
