@@ -1,3 +1,5 @@
+importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+
 // /web/service_worker.js
 const CACHE_NAME = "mindful-cache-v5";
 const CORE_ASSETS = ["/", "/index.html", "/manifest.json", "/assets/logo.png"];
