@@ -1,18 +1,9 @@
-importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
-
-
-// web/service_worker.js
-const CACHE_NAME = "mindful-cache-v4"; // <-- sube versión si cambias assets
-const CORE_ASSETS = [
-  "/", "/index.html",
-  "/manifest.json",
-  "/assets/logo.png",     // <-- tu logo
-];
+// /web/service_worker.js
+const CACHE_NAME = "mindful-cache-v5";
+const CORE_ASSETS = ["/", "/index.html", "/manifest.json", "/assets/logo.png"];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(CORE_ASSETS)));
   self.skipWaiting();
 });
 
@@ -25,16 +16,14 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Estrategia: network first para assets (si falla, cache)
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
-
   event.respondWith(
     fetch(req)
       .then((res) => {
-        const resClone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then((c) => c.put(req, clone));
         return res;
       })
       .catch(() => caches.match(req).then((r) => r || caches.match("/index.html")))
