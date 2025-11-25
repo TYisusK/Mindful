@@ -64,5 +64,5 @@ def main(page: ft.Page):
     page.go("/splash")
 
 if __name__ == "__main__":
-    # Asegúrate de que "assets" es el folder con logo.png
-    ft.app(target=main, assets_dir="assets", view=ft.WEB_BROWSER)
+    ft.app(target=main, assets_dir="assets")
+
